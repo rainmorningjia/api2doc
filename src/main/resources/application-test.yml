@@ -1,0 +1,4 @@
+spring:
+  profiles: test
+api2doc:
+        title: 测试
