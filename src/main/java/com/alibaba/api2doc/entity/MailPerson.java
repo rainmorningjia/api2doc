@@ -32,7 +32,7 @@ public class MailPerson implements Serializable {
      */
     private String email;
     @Column(name = "gmt_create")
-    private Long creteTime;
+    private Long createTime;
     @Column(name = "gmt_modified")
     private Long updateTime;
 }

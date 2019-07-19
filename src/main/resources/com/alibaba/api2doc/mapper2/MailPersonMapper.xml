@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.alibaba.api2doc.dao2.MailPersonMapper">
+    <resultMap id="mailPerson" type="com.alibaba.api2doc.entity.MailPerson">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR"/>
+        <result column="manager_name" property="managerName" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="createTime" jdbcType="BIGINT"/>
+        <result column="gmt_modified" property="updateTime" jdbcType="BIGINT"/>
+    </resultMap>
+    <select id="queryAllPerson" resultMap="mailPerson">
+        select * from mail_person
+    </select>
+</mapper>

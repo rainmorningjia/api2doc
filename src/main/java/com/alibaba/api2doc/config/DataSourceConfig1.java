@@ -4,6 +4,7 @@ import com.taobao.tddl.client.jdbc.TDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -16,17 +17,20 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
+@MapperScan(basePackages = "com.alibaba.api2doc.dao", sqlSessionFactoryRef = "test1SqlSessionFactory")
 public class DataSourceConfig1 {
     //将这个对象放入Spring容器中
     @Bean(name = "datasource1")
     //表示这个数据源为默认数据源
     @Primary
     public DataSource firstDataSource(Environment env) {
-        return DataSourceBuilder.create()
+        DataSource dataSource = DataSourceBuilder.create()
                 .url(env.getProperty("datasource.first.url"))
                 .type(TDataSource.class)
                 .build();
+        return dataSource;
     }
+
     @Bean(name = "test1SqlSessionFactory")
     // 表示这个数据源是默认数据源
     @Primary
@@ -37,9 +41,11 @@ public class DataSourceConfig1 {
         bean.setDataSource(datasource);
         bean.setMapperLocations(
                 // 设置mybatis的xml所在位置
-                new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/*.xml"));
+                new PathMatchingResourcePatternResolver().getResources("classpath:com/alibaba/api2doc/mapper/*.xml"));
+        System.out.println(bean.getClass());
         return bean.getObject();
     }
+
     @Bean("test1SqlSessionTemplate")
     // 表示这个数据源是默认数据源
     @Primary

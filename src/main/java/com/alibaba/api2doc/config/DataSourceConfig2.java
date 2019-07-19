@@ -1,5 +1,6 @@
 package com.alibaba.api2doc.config;
 
+import com.taobao.tddl.client.jdbc.TDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,17 +10,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.alibaba.api2doc", sqlSessionFactoryRef = "test2SqlSessionFactory")
+@MapperScan(basePackages = "com.alibaba.api2doc.dao2", sqlSessionFactoryRef = "test2SqlSessionFactory")
 public class DataSourceConfig2 {
     @Bean(name = "test2DataSource")
-    @ConfigurationProperties(prefix = "datasource.second.url")
-    public DataSource getDateSource2() {
-        return DataSourceBuilder.create().build();
+    public DataSource getDateSource2(Environment env) {
+        DataSource dataSource = DataSourceBuilder.create()
+                .url(env.getProperty("datasource.second.url"))
+                .type(TDataSource.class)
+                .build();
+        return dataSource;
     }
 
     @Bean(name = "test2SqlSessionFactory")
@@ -28,7 +33,7 @@ public class DataSourceConfig2 {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(datasource);
         bean.setMapperLocations(
-                new PathMatchingResourcePatternResolver().getResources("classpath*:mapping/test02/*.xml"));
+                new PathMatchingResourcePatternResolver().getResources("classpath:com/alibaba/api2doc/mapper2/*.xml"));
         return bean.getObject();
     }
 
