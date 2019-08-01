@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 public class User<T> {
 
     @ApiComment("用户id")
-    @ApiModelProperty(value = "用户id",name = "id",required = false)
+    @ApiModelProperty(value = "用户id",name = "id ",required = false)
     private Long id;
     @ApiComment("用户姓名")
-    @ApiModelProperty(value = "用户名",name = "name",required = true)
+    @ApiModelProperty(value = "用户名",name = "name ",required = true)
     private String name;
     @ApiComment("用户年龄")
     @ApiModelProperty(value = "用户年龄",name = "age",required = true)

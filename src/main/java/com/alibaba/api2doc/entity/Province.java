@@ -1,6 +1,6 @@
 package com.alibaba.api2doc.entity;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Api("省份")
+@ApiModel(description = "省份")
 public class Province implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -21,9 +21,9 @@ public class Province implements Serializable{
 	private String code;
 	@ApiModelProperty(value = "省份名称",name = "name",required = true)
 	private String name;
-	@ApiModelProperty(value = "创建时间",name = "createTime",required = true)
+	@ApiModelProperty(value = "创建时间",name = "createTime")
 	private Long createTime;
-	@ApiModelProperty(value = "修改时间",name = "updateTime",required = true)
+	@ApiModelProperty(value = "修改时间",name = "updateTime")
 	private Long updateTime;
 
 

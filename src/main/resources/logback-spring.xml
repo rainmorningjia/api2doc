@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <appender name="loghubAppender1" class="com.aliyun.openservices.log.logback.LoghubAppender">
+        <!--必选项-->
+        <!-- 账号及网络配置 -->
+        <endpoint>cn-hangzhou.log.aliyuncs.com</endpoint>
+        <accessKeyId>LTAIsFJTIRCdA8Ru</accessKeyId>
+        <accessKeySecret>fFlfijBvG2SljGTPhA8LCBA5QvwSF5</accessKeySecret>
+
+        <!-- sls 项目配置 -->
+        <project>api2doc-log</project>
+        <logStore>log-service</logStore>
+        <!--必选项 (end)-->
+
+<!--        &lt;!&ndash; 可选项 &ndash;&gt;
+        <topic>topic1</topic>
+        <source>source1</source>
+
+        &lt;!&ndash; 可选项 详见 '参数说明'&ndash;&gt;
+        <totalSizeInBytes>104857600</totalSizeInBytes>
+        <maxBlockMs>60000</maxBlockMs>
+        <ioThreadCount>8</ioThreadCount>
+        <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+        <batchCountThreshold>4096</batchCountThreshold>
+        <lingerMs>2000</lingerMs>
+        <retries>10</retries>
+        <baseRetryBackoffMs>100</baseRetryBackoffMs>
+        <maxRetryBackoffMs>100</maxRetryBackoffMs>-->
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 打印WARN,ERROR级别的日志 -->
+            <level>WARN</level>
+        </filter>
+
+        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
+    </appender>
+    <contextName>logback</contextName>
+    <property name="log.path" value="d:/jiachenyu/log"/>
+    <!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <level>ERROR</level>
+         </filter>-->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/logback.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 可用来获取StatusManager中的状态 -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+    <root level="info">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+    <logger name="com.alibaba.api2doc.controller" level="TRACE" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="loghubAppender1"/>
+    </logger>
+
+</configuration>
