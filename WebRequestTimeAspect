@@ -1,0 +1,103 @@
+/*
+package com.alibaba.aop.aspect;
+
+
+import com.taobao.search.config.DiamondConfigClient;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+@Aspect
+@Component
+public class WebRequestTimeAspect {
+    @Autowired
+    static DiamondConfigClient diamondConfigClient;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    ThreadLocal<Map<String, Long>> requestCount = new ThreadLocal<>();
+    ThreadLocal<Map<String, Long>> totalTime = new ThreadLocal<>();
+
+    static final String aspectController = "execution(* com.alibaba.aop.controllers..*..*(..))";
+
+    @Pointcut(value = aspectController)
+    public void timePointCut() {
+
+    }
+
+    @Around("timePointCut()")
+    public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        Boolean open = true;
+        if (diamondConfigClient != null) {
+            String requestTimeSwitch = diamondConfigClient.getConfigAndAddListener("aop_request_time_switch", "false");
+            open = Boolean.getBoolean(requestTimeSwitch);
+        }
+        long startTime = System.currentTimeMillis();
+        Object result = null;
+        if (open) {
+            try {
+                result = joinPoint.proceed();
+                if (requestCount.get() == null) {
+                    requestCount.set(new HashMap<>());
+                }
+                if (totalTime.get() == null) {
+                    totalTime.set(new HashMap<>());
+                }
+                if (result == null) {
+                    return null;
+                }
+                long end = System.currentTimeMillis();
+                String targerClassName = joinPoint.getSignature().getDeclaringTypeName();
+                String methodName = joinPoint.getSignature().getName();
+                Object[] args = joinPoint.getArgs();// 参数  
+                int argsSize = args.length;
+                String argsTypes = "";
+                String typeStr = joinPoint.getSignature().getDeclaringType().toString().split(" ")[0];
+                String returnType = joinPoint.getSignature().toString().split(" ")[0];
+                if (argsSize > 0) {
+                    for (Object o :
+                            args) {
+                        if (o != null && o.getClass() != null) {
+                            argsTypes += o.getClass().getTypeName().toString() + "";
+                        }
+                    }
+                }
+                long total = end - startTime;
+                logger.info("类/接口:" + targerClassName + "(" + typeStr + ")" + "方法:" + methodName +
+                        "参数个数:" + argsSize + "参数类型" + argsTypes + "返回类型:" + returnType + "耗时" + total + "ms!");
+                if (requestCount.get().containsKey(methodName)) {
+                    Long count = requestCount.get().get(methodName);
+                    requestCount.get().remove(methodName);
+                    requestCount.get().put(methodName, count++);
+                    Long time = totalTime.get().get(methodName);
+                    totalTime.get().remove(methodName);
+                    totalTime.get().put(methodName, time + total);
+                } else {
+                    requestCount.get().put(methodName, 1L);
+                    totalTime.get().put(methodName, total);
+                }
+
+                return result;
+
+            } catch (Throwable e) {
+                Long end = System.currentTimeMillis();
+                logger.info("the method of aspect is exception" + "Use time " + (end - startTime) + "ms" + e.getMessage());
+                throw e;
+            }
+        } else {
+            return result;
+        }
+
+    }
+}
+
+*/
