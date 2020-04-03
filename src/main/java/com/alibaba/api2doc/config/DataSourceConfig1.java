@@ -1,6 +1,6 @@
 package com.alibaba.api2doc.config;
 
-import com.taobao.tddl.client.jdbc.TDataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -11,7 +11,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -23,11 +22,9 @@ public class DataSourceConfig1 {
     @Bean(name = "datasource1")
     //表示这个数据源为默认数据源
     @Primary
-    public DataSource firstDataSource(Environment env) {
-        DataSource dataSource = DataSourceBuilder.create()
-                .url(env.getProperty("datasource.first.url"))
-                .type(TDataSource.class)
-                .build();
+    @ConfigurationProperties(prefix = "spring.datasource.first")
+    public DataSource firstDataSource() {
+        DataSource dataSource = DataSourceBuilder.create().type(DruidDataSource.class).build();
         return dataSource;
     }
 

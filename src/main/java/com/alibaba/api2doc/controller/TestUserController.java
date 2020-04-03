@@ -1,20 +1,29 @@
 package com.alibaba.api2doc.controller;
 
 
+import com.alibaba.api2doc.entity.MailPerson;
 import com.alibaba.api2doc.entity.User;
+import com.alibaba.api2doc.service.MailPersonService;
 import com.terran4j.commons.api2doc.annotations.Api2Doc;
 import com.terran4j.commons.api2doc.annotations.ApiComment;
 import com.terran4j.commons.api2doc.annotations.ApiError;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Api2Doc(id = "sample1", name = "用户接口", order = 1)
 @ApiComment(seeClass = User.class)
 @RestController
 @RequestMapping(value = "/users")
 public class TestUserController {
+
+    @Resource
+    private MailPersonService mailPersonService;
 
     @Api2Doc(order = 1)
     @ApiComment("添加一个新用户以对象的形式")
@@ -23,7 +32,7 @@ public class TestUserController {
         System.out.println(user);
     }
 
-    @Api2Doc(order = 2,name = "添加一个新用户以单个参数的形式2")
+    @Api2Doc(order = 2, name = "添加一个新用户以单个参数的形式2")
     @RequestMapping(value = "/insertUserInfo", method = RequestMethod.POST)
     @ApiComment("添加一个新用户以单个参数的形式")
     public void insertUserInfo(@ApiComment("用户id") Long id, @ApiComment("用户姓名") String name, @ApiComment("用户年龄") Integer age) {
@@ -55,5 +64,13 @@ public class TestUserController {
         user1.setName("家臣与");
         user1.setId(new Long(1000000));
         return user1;
+    }
+
+    @Api2Doc(order = 5,name = "得到所有邮件人信息")
+    @ApiComment("得到所有邮件人信息")
+    @RequestMapping(value = "getAllMailPerson")
+    public List<MailPerson> getAllMailPerson() {
+        List<MailPerson> mailPeople = mailPersonService.queryAllMailPerson();
+        return mailPeople;
     }
 }

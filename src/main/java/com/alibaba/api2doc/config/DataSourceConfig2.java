@@ -1,6 +1,6 @@
 package com.alibaba.api2doc.config;
 
-import com.taobao.tddl.client.jdbc.TDataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -19,11 +18,9 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = "com.alibaba.api2doc.dao2", sqlSessionFactoryRef = "test2SqlSessionFactory")
 public class DataSourceConfig2 {
     @Bean(name = "test2DataSource")
-    public DataSource getDateSource2(Environment env) {
-        DataSource dataSource = DataSourceBuilder.create()
-                .url(env.getProperty("datasource.second.url"))
-                .type(TDataSource.class)
-                .build();
+    @ConfigurationProperties(prefix = "spring.datasource.second")
+    public DataSource getDateSource2() {
+        DataSource dataSource = DataSourceBuilder.create().type(DruidDataSource.class).build();
         return dataSource;
     }
 
